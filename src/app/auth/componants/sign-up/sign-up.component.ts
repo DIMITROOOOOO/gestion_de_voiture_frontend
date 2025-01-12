@@ -1,0 +1,55 @@
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { UserService } from '../../service/auth.service';
+import { FormsModule, NgForm } from '@angular/forms';
+
+import { CommonModule } from '@angular/common';
+@Component({
+  selector: 'app-sign-up',
+  templateUrl: './sign-up.component.html',
+  styleUrls: ['./sign-up.component.css'],
+  standalone: true,
+  imports: [FormsModule,CommonModule],
+})
+export class SignUpComponent {
+  user = {
+    nom: '', 
+    motdepasse: '', 
+    email: '',
+    role: 'gestionnaire' 
+  };
+  roles = [
+    { value: 'gestionnaire', label: 'Gestionnaire' },
+    { value: 'admin', label: 'Admin' },
+    { value: 'chauffeur', label: 'Chauffeur' }
+  ];
+  constructor(private UserService: UserService, private router: Router) {}
+
+  onSubmit() {
+    this.UserService.createUser(this.user).subscribe({
+      next: (response) => {
+        console.log('User created successfully:', response);
+        this.router.navigate(['/login']); 
+        switch (this.user.role) {
+          case 'admin':
+            this.router.navigate(['/menu-admin']);
+            break;
+          case 'gestionnaire':
+            this.router.navigate(['/menu-gestionnaire']);
+            break;
+          case 'chauffeur':
+            this.router.navigate(['/menu-chauffeur']);
+            break;
+          default:
+            this.router.navigate(['/accueil']); // Default fallback
+            break;
+        }
+      },
+      
+      
+      error: (error) => {
+        console.error('Error creating user:', error);
+      }
+    });
+  }
+}
