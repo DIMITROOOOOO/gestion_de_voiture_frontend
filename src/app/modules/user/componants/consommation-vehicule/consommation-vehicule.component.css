@@ -1,0 +1,64 @@
+/* Style général du conteneur */
+.container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Style de la section de recherche */
+.search-section .input-group {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.search-section .btn {
+  margin-left: 10px;
+}
+
+/* Style du tableau */
+.table {
+  margin-top: 20px;
+}
+
+.table thead th {
+  background-color: #343a40;
+  color: white;
+}
+
+/* Style du modal */
+.modal-header {
+  background-color: #007bff;
+  color: white;
+}
+
+.modal-header .close {
+  color: white;
+}
+
+.modal-body .form-group {
+  margin-bottom: 15px;
+}
+
+/* Boutons du modal */
+.modal-body .btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.modal-body .btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+/* Ajustements pour les écrans mobiles */
+@media (max-width: 768px) {
+  .search-section .input-group {
+    flex-direction: column;
+  }
+
+  .search-section .btn {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+}

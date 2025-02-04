@@ -1,0 +1,57 @@
+/* Container styling */
+.report-container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Search bar styling */
+.search-container .input-group {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.search-container .btn {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.search-container .btn:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+/* Chart container styling */
+.chart-container {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chart-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Pie chart specific styling */
+.small-pie-chart {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .search-container .input-group {
+    max-width: 100%;
+  }
+
+  .chart-wrapper {
+    max-width: 100%;
+  }
+
+  .small-pie-chart {
+    max-width: 100%;
+  }
+}

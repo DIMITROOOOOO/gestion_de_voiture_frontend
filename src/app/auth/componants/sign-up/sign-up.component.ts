@@ -5,23 +5,22 @@ import { FormsModule, NgForm } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
 @Component({
-  selector: 'app-sign-up',
-  templateUrl: './sign-up.component.html',
-  styleUrls: ['./sign-up.component.css'],
-  standalone: true,
-  imports: [FormsModule,CommonModule],
+    selector: 'app-sign-up',
+    templateUrl: './sign-up.component.html',
+    styleUrls: ['./sign-up.component.css'],
+    imports: [FormsModule, CommonModule]
 })
 export class SignUpComponent {
   user = {
     nom: '', 
     motdepasse: '', 
     email: '',
-    role: 'gestionnaire' 
+    role: 'admin' 
   };
   roles = [
-    { value: 'gestionnaire', label: 'Gestionnaire' },
-    { value: 'admin', label: 'Admin' },
-    { value: 'chauffeur', label: 'Chauffeur' }
+    { value: 'gestionnaire', label: 'gestionnaire' },
+    { value: 'admin', label: 'admin' },
+    { value: 'chauffeur', label: 'chauffeur' }
   ];
   constructor(private UserService: UserService, private router: Router) {}
 
@@ -41,7 +40,7 @@ export class SignUpComponent {
             this.router.navigate(['/menu-chauffeur']);
             break;
           default:
-            this.router.navigate(['/accueil']); // Default fallback
+            this.router.navigate(['/accueil']); 
             break;
         }
       },

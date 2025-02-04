@@ -1,0 +1,295 @@
+<div class="container mt-4">
+  <div class="search-bar mb-3">
+    <input type="text" [(ngModel)]="searchQuery" placeholder="Rechercher..." (input)="filterCars()" class="form-control">
+    <select [(ngModel)]="searchCriteria" class="form-select mt-2">
+      <option value="plaque_immatriculation">Plaque d'immatriculation</option>
+      <option value="typeCarburant">Type de carburant</option>
+      <option value="marque">Marque</option>
+    </select>
+  </div>
+
+  <button class="btn btn-success mb-3" (click)="openAddModal()">
+    <i class="fas fa-plus"></i> Ajouter un Véhicule
+  </button>
+
+  <div class="row">
+    <div class="col-md-4 mb-4" *ngFor="let car of filteredCars">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ car.modele.marque }} {{ car.modele.modele }}</h5>
+          <p class="card-text">
+            <strong>Plaque d'immatriculation:</strong> {{ car.plaque_immatriculation }}<br>
+            <strong>Type de carburant:</strong> {{ car.typeCarburant }}<br>
+            <strong>Statut:</strong> {{ car.statut }}<br>
+            <strong>Kilométrage:</strong> {{ car.kilometrage }} km<br>
+            <strong>Vignette:</strong> {{ car.vignette.numeroVignette }}<br>
+            <strong>Assurance:</strong> {{ car.assurance.compagnieAssurance }}<br>
+            <strong>Taxe:</strong> {{ car.taxe.codeTaxe }}
+          </p>
+          <div class="d-flex justify-content-between">
+            <button class="btn btn-primary btn-sm" (click)="openEditModal(car)">
+              <i class="fas fa-edit"></i> Modifier
+            </button>
+            <button class="btn btn-danger btn-sm" (click)="deleteCar(car.vehicule_id)">
+              <i class="fas fa-trash"></i> Supprimer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #addCarModal let-modal>
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="addCarModalLabel">Ajouter un Véhicule</h5>
+          <button type="button" class="btn-close btn-close-white" (click)="modal.dismiss()" aria-label="Fermer"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs mb-3">
+            <li class="nav-item">
+              <a class="nav-link active" data-bs-toggle="tab" href="#vehicleInfo">Informations Véhicule</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" href="#modelInfo">Modèle</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" href="#vignetteInfo">Vignette</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" href="#assuranceInfo">Assurance</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" href="#taxInfo">Taxe</a>
+            </li>
+          </ul>
+
+          <div class="tab-content">
+            <div id="vehicleInfo" class="tab-pane fade show active">
+              <form [formGroup]="carForm">
+                <div class="mb-3">
+                  <label for="plaque_immatriculation" class="form-label">Plaque d'immatriculation</label>
+                  <input type="text" class="form-control" id="plaque_immatriculation" formControlName="plaque_immatriculation" required>
+                </div>
+                <div class="mb-3">
+                  <label for="kilometrage" class="form-label">Kilométrage</label>
+                  <input type="number" class="form-control" id="kilometrage" formControlName="kilometrage" required>
+                </div>
+                <div class="mb-3">
+                  <label for="dateMiseEnCirculation" class="form-label">Date de mise en circulation</label>
+                  <input type="date" class="form-control" id="dateMiseEnCirculation" formControlName="dateMiseEnCirculation" required>
+                </div>
+                <div class="mb-3">
+                  <label for="typeCarburant" class="form-label">Type de carburant</label>
+                  <select class="form-select" id="typeCarburant" formControlName="typeCarburant" required>
+                    <option *ngFor="let fuel of fuelTypes" [value]="fuel">{{ fuel }}</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="consommation" class="form-label">Consommation</label>
+                  <input type="number" class="form-control" id="consommation" formControlName="consommation" required>
+                </div>
+                <div class="mb-3">
+                  <label for="statut" class="form-label">Statut</label>
+                  <select class="form-select" id="statut" formControlName="statut" required>
+                    <option value="disponible">Disponible</option>
+                    <option value="assigné">Assigné</option>
+                    <option value="en_maintenance">En Maintenance</option>
+                  </select>
+                </div>
+              </form>
+            </div>
+
+            <div id="modelInfo" class="tab-pane fade">
+              <form [formGroup]="modelForm">
+                <div class="mb-3">
+                  <label for="marque" class="form-label">Marque</label>
+                  <input type="text" class="form-control" id="marque" formControlName="marque" required>
+                </div>
+                <div class="mb-3">
+                  <label for="modele" class="form-label">Modèle</label>
+                  <input type="text" class="form-control" id="modele" formControlName="modele" required>
+                </div>
+                <div class="mb-3">
+                  <label for="typeVehicle" class="form-label">Type de véhicule</label>
+                  <select class="form-select" id="typeVehicle" formControlName="typeVehicle" required>
+                    <option *ngFor="let vehicle of vehicleTypes" [value]="vehicle">{{ vehicle }}</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="typeBoiteVitesse" class="form-label">Type de boîte de vitesses</label>
+                  <select class="form-select" id="typeBoiteVitesse" formControlName="typeBoiteVitesse" required>
+                    <option *ngFor="let gearbox of gearboxTypes" [value]="gearbox">{{ gearbox }}</option>
+                  </select>
+                </div>
+              </form>
+            </div>
+
+            <div id="vignetteInfo" class="tab-pane fade">
+              <form [formGroup]="vignetteForm">
+                <div class="mb-3">
+                  <label for="numeroVignette" class="form-label">Numéro de vignette</label>
+                  <input type="text" class="form-control" id="numeroVignette" formControlName="numeroVignette" required>
+                </div>
+                <div class="mb-3">
+                  <label for="dateExpiration" class="form-label">Date d'expiration</label>
+                  <input type="date" class="form-control" id="dateExpiration" formControlName="dateExpiration" required>
+                </div>
+                <div class="mb-3">
+                  <label for="dateDebut" class="form-label">Date de début</label>
+                  <input type="date" class="form-control" id="dateDebut" formControlName="dateDebut" required>
+                </div>
+                <div class="mb-3">
+                  <label for="coutAchat" class="form-label">Coût d'achat</label>
+                  <input type="number" class="form-control" id="coutAchat" formControlName="coutAchat" required>
+                </div>
+              </form>
+            </div>
+
+            <div id="assuranceInfo" class="tab-pane fade">
+              <form [formGroup]="assuranceForm">
+                <div class="mb-3">
+                  <label for="idAssurance" class="form-label">ID Assurance</label>
+                  <input type="text" class="form-control" id="idAssurance" formControlName="idAssurance" required>
+                </div>
+                <div class="mb-3">
+                  <label for="compagnieAssurance" class="form-label">Compagnie d'assurance</label>
+                  <input type="text" class="form-control" id="compagnieAssurance" formControlName="compagnieAssurance" required>
+                </div>
+                <div class="mb-3">
+                  <label for="dateExpiration" class="form-label">Date d'expiration</label>
+                  <input type="date" class="form-control" id="dateExpiration" formControlName="dateExpiration" required>
+                </div>
+                <div class="mb-3">
+                  <label for="dateDebut" class="form-label">Date de début</label>
+                  <input type="date" class="form-control" id="dateDebut" formControlName="dateDebut" required>
+                </div>
+                <div class="mb-3">
+                  <label for="coutAssurance" class="form-label">Coût de l'assurance</label>
+                  <input type="number" class="form-control" id="coutAssurance" formControlName="coutAssurance" required>
+                </div>
+                <div class="mb-3">
+                  <label for="typeContrat" class="form-label">Type de contrat</label>
+                  <select class="form-select" id="typeContrat" formControlName="typeContrat" required>
+                    <option *ngFor="let contract of contractTypes" [value]="contract">{{ contract }}</option>
+                  </select>
+                </div>
+              </form>
+            </div>
+
+            <div id="taxInfo" class="tab-pane fade">
+              <form [formGroup]="taxForm">
+                <div class="mb-3">
+                  <label for="codeTaxe" class="form-label">Code de taxe</label>
+                  <input type="text" class="form-control" id="codeTaxe" formControlName="codeTaxe" required>
+                </div>
+                <div class="mb-3">
+                  <label for="montant" class="form-label">Montant de la taxe</label>
+                  <input type="number" class="form-control" id="montant" formControlName="montant" required>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Fermer</button>
+          <button type="button" class="btn btn-primary" (click)="onSubmit()">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #editCarModal let-modal>
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="editCarModalLabel">Modifier le Véhicule</h5>
+          <button type="button" class="btn-close btn-close-white" (click)="modal.dismiss()" aria-label="Fermer"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs mb-3">
+            <li class="nav-item">
+              <a class="nav-link active" data-bs-toggle="tab" href="#editVehicleInfo">Informations Véhicule</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" href="#editModelInfo">Modèle</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" href="#editVignetteInfo">Vignette</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" href="#editAssuranceInfo">Assurance</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" href="#editTaxInfo">Taxe</a>
+            </li>
+          </ul>
+
+          <div class="tab-content">
+            <div id="editVehicleInfo" class="tab-pane fade show active">
+              <form [formGroup]="editCarForm">
+                <div class="mb-3">
+                  <label for="editPlaque_immatriculation" class="form-label">Plaque d'immatriculation</label>
+                  <input type="text" class="form-control" id="editPlaque_immatriculation" formControlName="plaque_immatriculation" required>
+                </div>
+                <div class="mb-3">
+                  <label for="editKilometrage" class="form-label">Kilométrage</label>
+                  <input type="number" class="form-control" id="editKilometrage" formControlName="kilometrage" required>
+                </div>
+                <div class="mb-3">
+                  <label for="editDateMiseEnCirculation" class="form-label">Date de mise en circulation</label>
+                  <input type="date" class="form-control" id="editDateMiseEnCirculation" formControlName="dateMiseEnCirculation" required>
+                </div>
+                <div class="mb-3">
+                  <label for="editTypeCarburant" class="form-label">Type de carburant</label>
+                  <select class="form-select" id="editTypeCarburant" formControlName="typeCarburant" required>
+                    <option *ngFor="let fuel of fuelTypes" [value]="fuel">{{ fuel }}</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="editConsommation" class="form-label">Consommation</label>
+                  <input type="number" class="form-control" id="editConsommation" formControlName="consommation" required>
+                </div>
+                <div class="mb-3">
+                  <label for="editStatut" class="form-label">Statut</label>
+                  <select class="form-select" id="editStatut" formControlName="statut" required>
+                    <option value="disponible">Disponible</option>
+                    <option value="assigné">Assigné</option>
+                    <option value="en_maintenance">En Maintenance</option>
+                  </select>
+                </div>
+              </form>
+            </div>
+
+            <div id="editModelInfo" class="tab-pane fade">
+              <form [formGroup]="editModelForm">
+                <div class="mb-3">
+                  <label for="editMarque" class="form-label">Marque</label>
+                  <input type="text" class="form-control" id="editMarque" formControlName="marque" required>
+                </div>
+                <div class="mb-3">
+                  <label for="editModele" class="form-label">Modèle</label>
+                  <input type="text" class="form-control" id="editModele" formControlName="modele" required>
+                </div>
+                <div class="mb-3">
+                  <label for="editTypeVehicle" class="form-label">Type de véhicule</label>
+                  <select class="form-select" id="editTypeVehicle" formControlName="typeVehicle" required>
+                    <option *ngFor="let vehicle of vehicleTypes" [value]="vehicle">{{ vehicle }}</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="editTypeBoiteVitesse" class="form-label">Type de boîte de vitesses</label>
+                  <select class="form-select" id="editTypeBoiteVitesse" formControlName="typeBoiteVitesse" required>
+                    <option *ngFor="let gearbox of gearboxTypes" [value]="gearbox">{{ gearbox }}</option>
+                  </select>
+                </div>
+              </form>
+            </div>
+
+            <div id="editVignetteInfo" class="tab-pane fade">
+              <form [formGroup]="editVignetteForm">
+                <div class="mb-3">
+                  <label for="editNumeroVignette" class="form-label">Numéro de vignette</label>
+                  <input type="text" class="form-control" id="editNumeroVignette" formControlName="numeroVignette" required>
+                </div>

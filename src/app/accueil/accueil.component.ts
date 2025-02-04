@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
-import  {  Router, RouterModule  }  from  '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+
 @Component({
   selector: 'app-accueil',
   templateUrl: './accueil.component.html',
   styleUrls: ['./accueil.component.css'],
-  standalone: true,
   imports: [RouterModule],
   animations: [
     trigger('fadeInDown', [

@@ -1,0 +1,113 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h2 class="card-title text-center">Planifier une Maintenance</h2>
+        </div>
+        <div class="card-body">
+          <form (ngSubmit)="scheduleMaintenance()">
+            <div class="form-group mb-3">
+              <label for="vehiculeId" class="form-label">ID du Véhicule :</label>
+              <input
+                type="number"
+                id="vehiculeId"
+                class="form-control"
+                [(ngModel)]="maintenanceRequest.vehiculeId"
+                name="vehiculeId"
+                required
+              />
+            </div>
+
+            <!-- Date Planifiée -->
+            <div class="form-group mb-3">
+              <label for="datePlanifiee" class="form-label">Date Planifiée :</label>
+              <input
+                type="date"
+                id="datePlanifiee"
+                class="form-control"
+                [(ngModel)]="maintenanceRequest.datePlanifiee"
+                name="datePlanifiee"
+                required
+              />
+            </div>
+
+            <!-- Description -->
+            <div class="form-group mb-3">
+              <label for="description" class="form-label">Description :</label>
+              <textarea
+                id="description"
+                class="form-control"
+                [(ngModel)]="maintenanceRequest.description"
+                name="description"
+                required
+              ></textarea>
+            </div>
+
+            <!-- Statut -->
+            <div class="form-group mb-3">
+              <label for="statut" class="form-label">Statut :</label>
+              <select
+                id="statut"
+                class="form-select"
+                [(ngModel)]="maintenanceRequest.statut"
+                name="statut"
+                required
+              >
+                <option value="planifie">Planifié</option>
+                <option value="termine">Terminé</option>
+                <option value="enAttente">En Attente</option>
+              </select>
+            </div>
+
+            <!-- Nature -->
+            <div class="form-group mb-3">
+              <label for="nature" class="form-label">Nature :</label>
+              <select
+                id="nature"
+                class="form-select"
+                [(ngModel)]="maintenanceRequest.nature"
+                name="nature"
+                required
+              >
+                <option value="maintenance_preventive">Préventive</option>
+                <option value="maintenance_corrective">Corrective</option>
+              </select>
+            </div>
+
+            <!-- Type -->
+            <div class="form-group mb-3">
+              <label for="type" class="form-label">Type :</label>
+              <input
+                type="text"
+                id="type"
+                class="form-control"
+                [(ngModel)]="maintenanceRequest.type"
+                name="type"
+                required
+              />
+            </div>
+
+            <!-- Dépense -->
+            <div class="form-group mb-3">
+              <label for="depense" class="form-label">Dépense :</label>
+              <input
+                type="number"
+                id="depense"
+                class="form-control"
+                [(ngModel)]="maintenanceRequest.depense"
+                name="depense"
+                step="0.01"
+              />
+            </div>
+
+            <!-- Bouton de Soumission -->
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Planifier la Maintenance</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

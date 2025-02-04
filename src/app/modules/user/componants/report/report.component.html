@@ -1,0 +1,42 @@
+<div class="report-container container mt-5">
+  <h2 class="text-center mb-4">Rapport des Dépenses du Véhicule</h2>
+
+  <!-- Barre de recherche -->
+  <div class="search-container mb-4">
+    <div class="input-group">
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="immatriculation"
+        placeholder="Entrez l'immatriculation du véhicule"
+      />
+      <button class="btn btn-primary" (click)="searchVehicle()">Rechercher</button>
+    </div>
+  </div>
+
+  <!-- Graphique à barres -->
+  <div class="chart-container mb-5" *ngIf="barChartData?.labels?.length > 0">
+    <h3 class="text-center mb-3">Dépenses par Catégorie</h3>
+    <div class="chart-wrapper">
+      <canvas
+        baseChart
+        [data]="barChartData"
+        [options]="barChartOptions"
+        type="bar"
+      ></canvas>
+    </div>
+  </div>
+
+  <!-- Graphique en camembert -->
+  <div class="chart-container mb-5" *ngIf="pieChartData?.labels?.length > 0">
+    <h3 class="text-center mb-3">Répartition des Dépenses</h3>
+    <div class="chart-wrapper small-pie-chart">
+      <canvas
+        baseChart
+        [data]="pieChartData"
+        [options]="pieChartOptions"
+        type="pie"
+      ></canvas>
+    </div>
+  </div>
+</div>
