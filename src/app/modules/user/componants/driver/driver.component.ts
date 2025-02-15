@@ -3,7 +3,7 @@ import { ChauffeurService } from '../../services/chauffeur-service.service';
 import { CarService } from '../../services/car.service';
 import { Driver } from '../../../../models/driver';
 import { driverStatut } from '../../../../models/driverStatut';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-driver',
   templateUrl: './driver.component.html',
@@ -42,7 +42,6 @@ export class DriverComponent implements OnInit {
     this.loadAvailableVehicles();
   }
 
-  // Fetch all chauffeurs
   loadChauffeurs(): void {
     this.chauffeurService.getChauffeurs().subscribe({
       next: (data) => {
@@ -57,12 +56,11 @@ export class DriverComponent implements OnInit {
     });
   }
 
-  // Fetch available vehicles
   loadAvailableVehicles(): void {
-    console.log('Fetching available vehicles...'); // Debugging
+    console.log('Fetching available vehicles...'); 
     this.carService.getAvailableVehicles().subscribe({
       next: (data) => {
-        console.log('Received data:', data); // Debugging
+        console.log('Received data:', data); 
         this.availableVehicles = data;
       },
       error: (error) => {
@@ -71,7 +69,7 @@ export class DriverComponent implements OnInit {
     });
   }
 
-  // Open a modal
+  
   openModal(modalId: string): void {
     if (modalId === 'addChauffeurModal') {
       this.showAddChauffeurModal = true;
@@ -84,7 +82,7 @@ export class DriverComponent implements OnInit {
     }
   }
 
-  // Close a modal
+
   closeModal(modalId: string): void {
     if (modalId === 'addChauffeurModal') {
       this.showAddChauffeurModal = false;
@@ -97,24 +95,37 @@ export class DriverComponent implements OnInit {
     }
   }
 
-  // Open Edit Modal
+  
   openEditModal(chauffeur: Driver): void {
-    this.currentChauffeur = { ...chauffeur }; // Set the selected chauffeur
-    this.openModal('editChauffeurModal'); // Open the modal
+    this.currentChauffeur = { ...chauffeur }; 
+    this.openModal('editChauffeurModal'); 
   }
 
-  // Open Delete Modal
+  
   openDeleteModal(chauffeur: Driver): void {
-    this.currentChauffeur = { ...chauffeur }; // Set the selected chauffeur
-    this.openModal('deleteChauffeurModal'); // Open the modal
+    this.currentChauffeur = { ...chauffeur };
+  
+    Swal.fire({
+      title: 'Supprimer le chauffeur ?',
+      text: 'Êtes-vous sûr(e) de vouloir supprimer ce chauffeur ? Cette action est irréversible.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Oui, supprimer',
+      cancelButtonText: 'Annuler'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.deleteChauffeur(this.currentChauffeur.chauffeur_id);
+      }
+    });
   }
 
-  // Set the selected vehicle
   setSelectedVehicle(vehicle: any): void {
     this.selectedVehicle = vehicle;
   }
 
-  // Add a new chauffeur
+  
   addChauffeur(): void {
     const payload = {
       ...this.currentChauffeur,
@@ -124,9 +135,9 @@ export class DriverComponent implements OnInit {
     this.chauffeurService.addChauffeur(payload).subscribe({
       next: () => {
         alert('Chauffeur added successfully!');
-        this.loadChauffeurs(); // Refresh chauffeurs list
-        this.resetForm(); // Reset the form
-        this.closeModal('addChauffeurModal'); // Close the modal
+        this.loadChauffeurs(); 
+        this.resetForm(); 
+        this.closeModal('addChauffeurModal'); 
       },
       error: (error) => {
         console.error('Error adding chauffeur:', error);
@@ -134,7 +145,7 @@ export class DriverComponent implements OnInit {
     });
   }
 
-  // Update a chauffeur
+  
   updateChauffeur(): void {
     const payload = {
       ...this.currentChauffeur,

@@ -5,7 +5,7 @@ import { Modele } from "./Modele";
 import { Taxe } from "./Taxe";
 import { TypeCarburant } from "./typeCarburant";
 export interface Vehicule {
-  vehicule_id: number;
+  vehiculeId: number;
   plaque_immatriculation: string;
   kilometrage: number;
   dateMiseEnCirculation: Date;
@@ -16,4 +16,6 @@ export interface Vehicule {
   vignette: Vignette;
   assurance: Assurance;
   taxe: Taxe;
+
+ 
 }

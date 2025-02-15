@@ -1,0 +1,82 @@
+<div class="container mt-5">
+  <h2 class="text-center mb-3">Rechercher des véhicules par date d'expiration d'assurance ou de vignette</h2>
+  <p class="text-center mb-4">
+    Cette fonctionnalité permet de vérifier les assurances et vignettes expirant dans l'intervalle de dates sélectionné.
+  </p>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="dateDebut">Date de début</label>
+        <input
+          type="date"
+          class="form-control"
+          id="dateDebut"
+          [(ngModel)]="dateInterval.dateDebut"
+        />
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="dateFin">Date de fin</label>
+        <input
+          type="date"
+          class="form-control"
+          id="dateFin"
+          [(ngModel)]="dateInterval.dateFin"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="searchType">Type de recherche</label>
+        <select
+          class="form-control"
+          id="searchType"
+          [(ngModel)]="searchType"
+        >
+          <option value="assurance">Expiration de l'assurance</option>
+          <option value="vignette">Expiration de la vignette</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-12">
+      <button class="btn btn-primary" (click)="onSearch()">Rechercher</button>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="vehicles.length > 0" class="mt-4">
+    <h3>Résultats</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Plaque d'immatriculation</th>
+          <th>Kilométrage</th>
+          <th>Type de carburant</th>
+          <th>Statut</th>
+          <th>Coût de l'assurance</th>
+          <th>Coût de la vignette</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vehicle of vehicles">
+          <td>{{ vehicle.plaque_immatriculation }}</td>
+          <td>{{ vehicle.kilometrage }}</td>
+          <td>{{ vehicle.typeCarburant }}</td>
+          <td>{{ vehicle.statut }}</td>
+          <td>{{ vehicle.assurance.coutAssurance }}</td>
+          <td>{{ vehicle.vignette.coutAchat }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

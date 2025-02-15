@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { Chart, registerables } from 'chart.js'; 
 import { CarService } from '../../services/car.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
@@ -15,56 +16,52 @@ export class ReportComponent implements OnInit {
     datasets: [], 
   };
   
-  pieChartData: any = {
-    labels: [], 
-    datasets: [],
-  };
-
+  expenseTableData: { category: string; amount: number }[] = [];
   barChartOptions: ChartOptions<'bar'> = {
     responsive: true,
     plugins: {
       title: {
         display: true,
-        text: 'Expenses by Category',
+        text: 'annees 2024/2025',
       },
     },
   };
 
-  pieChartOptions: ChartOptions<'pie'> = {
-    responsive: true,
-    plugins: {
-      title: {
-        display: true,
-        text: 'Expenses Distribution',
-      },
-    },
-  };
 
-  constructor(private vehiculeService: CarService) {
+  constructor(private vehiculeService: CarService,private route: ActivatedRoute) {
     Chart.register(...registerables);
   }
 
-  ngOnInit(): void {}
-
-  searchVehicle(): void {
-    if (!this.immatriculation) {
-      alert('Please enter a vehicle immatriculation.');
-      return;
-    }
-
-    this.vehiculeService
-      .getFeesByImmatriculation(this.immatriculation)
-      .subscribe(
-        (feesResponse: any) => {
-          this.updateCharts(feesResponse);
-        },
-        (error) => {
-          console.error('Error fetching vehicle fees:', error);
-          alert('Vehicle not found or an error occurred.');
-        }
-      );
+  ngOnInit() {
+    this.route.paramMap.subscribe((params) => {
+      this.immatriculation = params.get('plaque_immatriculation') || '';
+      console.log("Retrieved Matriculation:", this.immatriculation); 
+  
+      if (this.immatriculation) {
+        this.loadExpenses();
+      } else {
+        this.errorMessage = 'Aucune immatriculation fournie.';
+      }
+    });
+  }
+  
+  errorMessage: string = '';
+  loadExpenses(): void {
+    this.vehiculeService.getFeesByImmatriculation(this.immatriculation).subscribe({
+      next: (feesResponse: any) => {
+        console.log("API Response:", feesResponse);
+        this.errorMessage = ''; 
+        this.updateCharts(feesResponse);
+      },
+      error: (error) => {
+        console.error('Erreur lors de la récupération des dépenses:', error);
+        this.errorMessage = 'Véhicule non trouvé ou une erreur est survenue.';
+        this.barChartData = { labels: [], datasets: [] }; 
+      },
+    });
   }
 
+  
   updateCharts(feesResponse: any): void {
     const labels = [
       'Assurance',
@@ -80,7 +77,10 @@ export class ReportComponent implements OnInit {
       feesResponse.maintenanceFees,
       feesResponse.consommationFees,
     ];
-
+    this.expenseTableData = labels.map((label, index) => ({
+      category: label,
+      amount: data[index] || 0, 
+    }));
     this.barChartData = {
       labels: labels,
       datasets: [
@@ -89,30 +89,6 @@ export class ReportComponent implements OnInit {
           data: data,
           backgroundColor: 'rgba(75, 192, 192, 0.2)',
           borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1,
-        },
-      ],
-    };
-
-    this.pieChartData = {
-      labels: labels,
-      datasets: [
-        {
-          data: data,
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-          ],
           borderWidth: 1,
         },
       ],

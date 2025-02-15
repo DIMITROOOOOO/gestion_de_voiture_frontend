@@ -18,8 +18,10 @@ export class MaintenanceComponent implements OnInit {
     depense: 0,
     nature: Nature.maintenance_preventive, 
     type: '', 
-  };
 
+  };
+  showPreventiveMaintenances: boolean = false;
+  preventiveMaintenances: MaintenanceRequest[] = []; 
   Statut = Statut;
   Nature = Nature; 
 
@@ -52,4 +54,22 @@ export class MaintenanceComponent implements OnInit {
       type: '', 
     };
   }
+  fetchPreventiveMaintenance(): void {
+    if (this.preventiveMaintenances.length === 0) {
+    this.maintenanceService.getMaintenancesByNature(Nature.maintenance_preventive).subscribe({
+      next: (data) => {
+        this.preventiveMaintenances = data;
+        console.log('Maintenances préventives récupérées:', data);
+      },
+      error: (error) => {
+        console.error('Erreur lors de la récupération des maintenances préventives:', error);
+        alert('Échec de la récupération des maintenances préventives.');
+      },
+    });
+  }
+  else {
+    this.showPreventiveMaintenances = !this.showPreventiveMaintenances;
+  }
+}
+  
 }

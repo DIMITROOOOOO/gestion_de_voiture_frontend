@@ -1,5 +1,5 @@
 <div class="container mt-4">
-  <h2>User Management</h2>
+  <h2>gestion des utilisateurs</h2>
 
   <div *ngIf="loading" class="text-center">
     <div class="spinner-border text-primary" role="status">
@@ -15,9 +15,9 @@
     <thead>
       <tr>
         <th>ID</th>
-        <th>Name</th>
+        <th>nom</th>
         <th>Email</th>
-        <th>Password</th>
+        <th>mot de passe </th>
         <th>Role</th>
         <th>Actions</th>
       </tr>
@@ -40,10 +40,6 @@
       </tr>
     </tbody>
   </table>
-
-  <button class="btn btn-success" (click)="openAddUserModal(addModal)">
-    Add User
-  </button>
 </div>
 
 <ng-template #addModal let-modal>

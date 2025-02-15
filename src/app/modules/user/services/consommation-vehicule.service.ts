@@ -22,4 +22,7 @@ export class ConsommationVehiculeService {
       ...newConsommation,
     });
   }
+  getTotalConsommationFeesByVehicule(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/total-consommation-fees`);
+  }
 }

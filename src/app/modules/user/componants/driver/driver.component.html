@@ -1,22 +1,24 @@
 <div class="container mt-4">
-  <h2 class="mb-4">Manage Drivers</h2>
+  <h2 class="mb-4 text-center">Gestion des Chauffeurs</h2>
 
-  <button class="btn btn-primary mb-3" (click)="openModal('addChauffeurModal')">Add Driver</button>
+  <button class="btn btn-primary mb-3" (click)="openModal('addChauffeurModal')">
+    <i class="fas fa-plus"></i> Ajouter un Chauffeur
+  </button>
 
-  <div class="card mb-4">
-    <div class="card-header">
-      <h3>Drivers</h3>
+  <div class="card mb-4 shadow">
+    <div class="card-header bg-primary text-white">
+      <h3 class="card-title">Liste des Chauffeurs</h3>
     </div>
     <div class="card-body">
-      <table class="table table-striped">
-        <thead>
+      <table class="table table-striped table-hover">
+        <thead class="thead-dark">
           <tr>
             <th>ID</th>
-            <th>Name</th>
-            <th>Phone</th>
-            <th>License Number</th>
-            <th>Hire Date</th>
-            <th>Status</th>
+            <th>Nom</th>
+            <th>Téléphone</th>
+            <th>Numéro de Permis</th>
+            <th>Date d'Embauche</th>
+            <th>Statut</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -26,44 +28,14 @@
             <td>{{ chauffeur.nom }}</td>
             <td>{{ chauffeur.telephone }}</td>
             <td>{{ chauffeur.numero_permis }}</td>
-            <td>{{ chauffeur.date_embauche | date }}</td>
+            <td>{{ chauffeur.date_embauche | date: 'dd/MM/yyyy' }}</td>
             <td>{{ chauffeur.statutChaffeurs }}</td>
             <td>
-              <button class="btn btn-warning btn-sm me-2" (click)=" openEditModal(chauffeur)">Edit</button>
-              <button class="btn btn-danger btn-sm" (click)="openDeleteModal(chauffeur)">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
-      <h3>Available Vehicles</h3>
-    </div>
-    <div class="card-body">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Brand</th>
-            <th>Model</th>
-            <th>License Plate</th>
-            <th>Status</th>
-            <th>Assign to Driver</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let vehicle of availableVehicles">
-            <td>{{ vehicle.vehicule_id }}</td>
-            <td>{{ vehicle.marque }}</td>
-            <td>{{ vehicle.modele }}</td>
-            <td>{{ vehicle.plaque_immatriculation }}</td>
-            <td>{{ vehicle.statut }}</td>
-            <td>
-              <button class="btn btn-success btn-sm" (click)="setSelectedVehicle(vehicle); openModal('assignVehicleModal')">
-                Assign
+              <button class="btn btn-warning btn-sm me-2" (click)="openEditModal(chauffeur)">
+                <i class="fas fa-edit"></i> Modifier
+              </button>
+              <button class="btn btn-danger btn-sm" (click)="openDeleteModal(chauffeur)">
+                <i class="fas fa-trash"></i> Supprimer
               </button>
             </td>
           </tr>
@@ -73,64 +45,46 @@
   </div>
 </div>
 
+
 <div *ngIf="showAddChauffeurModal" class="modal fade show" tabindex="-1" style="display: block;">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Add Chauffeur</h5>
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Ajouter un Chauffeur</h5>
         <button type="button" class="btn-close" (click)="closeModal('addChauffeurModal')"></button>
       </div>
       <div class="modal-body">
         <form (ngSubmit)="addChauffeur()">
           <div class="mb-3">
-            <label for="nom" class="form-label">Name:</label>
+            <label for="nom" class="form-label">Nom:</label>
             <input id="nom" class="form-control" [(ngModel)]="currentChauffeur.nom" name="nom" required />
           </div>
           <div class="mb-3">
-            <label for="telephone" class="form-label">Phone:</label>
+            <label for="telephone" class="form-label">Téléphone:</label>
             <input id="telephone" class="form-control" [(ngModel)]="currentChauffeur.telephone" name="telephone" required />
           </div>
           <div class="mb-3">
-            <label for="numero_permis" class="form-label">License Number:</label>
+            <label for="numero_permis" class="form-label">Numéro de Permis:</label>
             <input id="numero_permis" class="form-control" [(ngModel)]="currentChauffeur.numero_permis" name="numero_permis" required />
           </div>
           <div class="mb-3">
-            <label for="date_embauche" class="form-label">Hire Date:</label>
+            <label for="date_embauche" class="form-label">Date d'Embauche:</label>
             <input id="date_embauche" type="date" class="form-control" [(ngModel)]="currentChauffeur.date_embauche" name="date_embauche" required />
           </div>
           <div class="mb-3">
-            <label for="statutChaffeurs" class="form-label">Status:</label>
+            <label for="statutChaffeurs" class="form-label">Statut:</label>
             <select id="statutChaffeurs" class="form-select" [(ngModel)]="currentChauffeur.statutChaffeurs" name="statutChaffeurs" required>
               <option *ngFor="let status of getDriverStatutValues()" [value]="status">{{ status }}</option>
             </select>
           </div>
-          <button type="submit" class="btn btn-primary">Add</button>
-          <button type="button" class="btn btn-secondary" (click)="closeModal('addChauffeurModal')">Cancel</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div *ngIf="showAssignVehicleModal" class="modal fade show" tabindex="-1" style="display: block;">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Assign Vehicle</h5>
-        <button type="button" class="btn-close" (click)="closeModal('assignVehicleModal')"></button>
-      </div>
-      <div class="modal-body">
-        <form (ngSubmit)="assignChauffeurToVehicle()">
-          <div class="mb-3">
-            <label for="chauffeurSelect" class="form-label">Select Chauffeur:</label>
-            <select id="chauffeurSelect" class="form-select" [(ngModel)]="selectedChauffeurId" name="chauffeurSelect" required>
-              <option *ngFor="let chauffeur of availableChauffeurs" [value]="chauffeur.chauffeur_id">
-                {{ chauffeur.nom }} (ID: {{ chauffeur.chauffeur_id }})
-              </option>
-            </select>
+          <div class="text-end">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Ajouter
+            </button>
+            <button type="button" class="btn btn-secondary ms-2" (click)="closeModal('addChauffeurModal')">
+              <i class="fas fa-times"></i> Annuler
+            </button>
           </div>
-          <button type="submit" class="btn btn-primary">Assign</button>
-          <button type="button" class="btn btn-secondary" (click)="closeModal('assignVehicleModal')">Cancel</button>
         </form>
       </div>
     </div>
@@ -140,36 +94,42 @@
 <div *ngIf="showEditChauffeurModal" class="modal fade show" tabindex="-1" style="display: block;">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Edit Chauffeur</h5>
+      <div class="modal-header bg-warning text-white">
+        <h5 class="modal-title">Modifier le Chauffeur</h5>
         <button type="button" class="btn-close" (click)="closeModal('editChauffeurModal')"></button>
       </div>
       <div class="modal-body">
         <form (ngSubmit)="updateChauffeur()">
           <div class="mb-3">
-            <label for="editNom" class="form-label">Name:</label>
+            <label for="editNom" class="form-label">Nom:</label>
             <input id="editNom" class="form-control" [(ngModel)]="currentChauffeur.nom" name="nom" required />
           </div>
           <div class="mb-3">
-            <label for="editTelephone" class="form-label">Phone:</label>
+            <label for="editTelephone" class="form-label">Téléphone:</label>
             <input id="editTelephone" class="form-control" [(ngModel)]="currentChauffeur.telephone" name="telephone" required />
           </div>
           <div class="mb-3">
-            <label for="editNumeroPermis" class="form-label">License Number:</label>
+            <label for="editNumeroPermis" class="form-label">Numéro de Permis:</label>
             <input id="editNumeroPermis" class="form-control" [(ngModel)]="currentChauffeur.numero_permis" name="numero_permis" required />
           </div>
           <div class="mb-3">
-            <label for="editDateEmbauche" class="form-label">Hire Date:</label>
+            <label for="editDateEmbauche" class="form-label">Date d'Embauche:</label>
             <input id="editDateEmbauche" type="date" class="form-control" [(ngModel)]="currentChauffeur.date_embauche" name="date_embauche" required />
           </div>
           <div class="mb-3">
-            <label for="editStatutChaffeurs" class="form-label">Status:</label>
+            <label for="editStatutChaffeurs" class="form-label">Statut:</label>
             <select id="editStatutChaffeurs" class="form-select" [(ngModel)]="currentChauffeur.statutChaffeurs" name="statutChaffeurs" required>
               <option *ngFor="let status of getDriverStatutValues()" [value]="status">{{ status }}</option>
             </select>
           </div>
-          <button type="submit" class="btn btn-primary">Update</button>
-          <button type="button" class="btn btn-secondary" (click)="closeModal('editChauffeurModal')">Cancel</button>
+          <div class="text-end">
+            <button type="submit" class="btn btn-warning">
+              <i class="fas fa-save"></i> Mettre à Jour
+            </button>
+            <button type="button" class="btn btn-secondary ms-2" (click)="closeModal('editChauffeurModal')">
+              <i class="fas fa-times"></i> Annuler
+            </button>
+          </div>
         </form>
       </div>
     </div>
@@ -179,16 +139,20 @@
 <div *ngIf="showDeleteChauffeurModal" class="modal fade show" tabindex="-1" style="display: block;">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Delete Chauffeur</h5>
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Supprimer le Chauffeur</h5>
         <button type="button" class="btn-close" (click)="closeModal('deleteChauffeurModal')"></button>
       </div>
       <div class="modal-body">
-        <p>Are you sure you want to delete this chauffeur?</p>
+        <p>Êtes-vous sûr de vouloir supprimer ce chauffeur ?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="closeModal('deleteChauffeurModal')">Cancel</button>
-        <button type="button" class="btn btn-danger" (click)="deleteChauffeur(currentChauffeur.chauffeur_id)">Delete</button>
+        <button type="button" class="btn btn-secondary" (click)="closeModal('deleteChauffeurModal')">
+          <i class="fas fa-times"></i> Annuler
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteChauffeur(currentChauffeur.chauffeur_id)">
+          <i class="fas fa-trash"></i> Supprimer
+        </button>
       </div>
     </div>
   </div>

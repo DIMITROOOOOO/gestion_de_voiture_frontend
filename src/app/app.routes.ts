@@ -30,15 +30,19 @@ export const routes: Routes = [
               import('./modules/user/componants/maintenance/maintenance.module').then((m) => m.MaintenanceModule),
           },
           {
-            path: 'report',
+            path: 'report/:plaque_immatriculation',
             loadChildren: () =>
               import('./modules/user/componants/report/report.module').then((m) => m.ReportModule),
           },
           { 
-            path: 'consommation-vehicule', 
+            path: 'consommation-vehicule/:plaque_immatriculation', 
             loadChildren: () => import('./modules/user/componants/consommation-vehicule/consommation-vehicule.module').then(m => m.ConsommationVehiculeModule) 
           },
-          { path: '', redirectTo: 'car', pathMatch: 'full' }, // Default route for menu-gestionnaire
+          { 
+            path: 'vehicle-expiration', 
+            loadChildren: () => import('./modules/user/componants/vehicle-expiration/vehicle-expiration.module').then(m => m.VehicleExpirationModule) 
+          },
+          { path: '', redirectTo: 'car', pathMatch: 'full' }, 
         ],
       },
       { path: '**', redirectTo: '' },

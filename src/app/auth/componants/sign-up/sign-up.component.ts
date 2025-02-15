@@ -18,9 +18,9 @@ export class SignUpComponent {
     role: 'admin' 
   };
   roles = [
-    { value: 'gestionnaire', label: 'gestionnaire' },
+    { value: 'gestionnaire', label: 'gestionnaire du parc' },
     { value: 'admin', label: 'admin' },
-    { value: 'chauffeur', label: 'chauffeur' }
+
   ];
   constructor(private UserService: UserService, private router: Router) {}
 

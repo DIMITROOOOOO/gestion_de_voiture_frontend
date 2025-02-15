@@ -6,7 +6,9 @@
           <h2 class="card-title text-center">Planifier une Maintenance</h2>
         </div>
         <div class="card-body">
+          <!-- Form for Scheduling Maintenance -->
           <form (ngSubmit)="scheduleMaintenance()">
+            <!-- Vehicule ID -->
             <div class="form-group mb-3">
               <label for="vehiculeId" class="form-label">ID du Véhicule :</label>
               <input
@@ -32,7 +34,6 @@
               />
             </div>
 
-            <!-- Description -->
             <div class="form-group mb-3">
               <label for="description" class="form-label">Description :</label>
               <textarea
@@ -44,7 +45,6 @@
               ></textarea>
             </div>
 
-            <!-- Statut -->
             <div class="form-group mb-3">
               <label for="statut" class="form-label">Statut :</label>
               <select
@@ -60,7 +60,6 @@
               </select>
             </div>
 
-            <!-- Nature -->
             <div class="form-group mb-3">
               <label for="nature" class="form-label">Nature :</label>
               <select
@@ -75,7 +74,6 @@
               </select>
             </div>
 
-            <!-- Type -->
             <div class="form-group mb-3">
               <label for="type" class="form-label">Type :</label>
               <input
@@ -88,7 +86,6 @@
               />
             </div>
 
-            <!-- Dépense -->
             <div class="form-group mb-3">
               <label for="depense" class="form-label">Dépense :</label>
               <input
@@ -101,11 +98,44 @@
               />
             </div>
 
-            <!-- Bouton de Soumission -->
             <div class="d-grid">
               <button type="submit" class="btn btn-primary">Planifier la Maintenance</button>
             </div>
           </form>
+
+          <div class="d-grid mt-3">
+            <button class="btn btn-secondary" (click)="fetchPreventiveMaintenance()">
+              {{ showPreventiveMaintenances ? 'Masquer' : 'Afficher' }} les Maintenances Préventives
+            </button>
+          </div>
+
+          <div class="mt-4" *ngIf="showPreventiveMaintenances && preventiveMaintenances.length > 0">
+            <h3 class="text-center">Liste des Maintenances Préventives</h3>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  
+                  <th scope="col">Date Planifiée</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Statut</th>
+                  <th scope="col">Nature</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Dépense</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let maintenance of preventiveMaintenances">
+                
+                  <td>{{ maintenance.datePlanifiee | date: 'dd/MM/yyyy' }}</td>
+                  <td>{{ maintenance.description }}</td>
+                  <td>{{ maintenance.statut }}</td>
+                  <td>{{ maintenance.nature }}</td>
+                  <td>{{ maintenance.type }}</td>
+                  <td>{{ maintenance.depense  }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

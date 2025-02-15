@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Vehicule } from '../../../models/Vehicule';
+import { DateIntervalDTO } from '../../../models/DateIntervalDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -36,5 +37,12 @@ export class CarService {
   }
   getAvailableVehicles(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/available`);
+  }
+  getVehiclesByAssuranceExpiration(dateInterval: DateIntervalDTO): Observable<Vehicule[]> {
+    return this.http.post<Vehicule[]>(`${this.apiUrl}/by-assurance-expiration`, dateInterval);
+  }
+
+  getVehiclesByVignetteExpiration(dateInterval: DateIntervalDTO): Observable<Vehicule[]> {
+    return this.http.post<Vehicule[]>(`${this.apiUrl}/by-vignette-expiration`, dateInterval);
   }
 }

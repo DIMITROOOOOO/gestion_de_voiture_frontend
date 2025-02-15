@@ -3,7 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { CarComponent } from './car.component';
 
 const routes: Routes = [
-  { path: '', component: CarComponent }, // Default route for the car module
+  { path: '', component: CarComponent }, 
+  {path: 'consommation-vehicule/:plaque_immatriculation', 
+  loadChildren: () => import('../consommation-vehicule/consommation-vehicule.module').then(m => m.ConsommationVehiculeModule)},
+  {path:'report/:plaque_immatriculation',loadChildren: () => import('../report/report.module').then(m => m.ReportModule)},
+  
+
 ];
 
 @NgModule({

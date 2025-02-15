@@ -7,6 +7,8 @@ import { TypeCarburant } from '../../../../models/typeCarburant';
 import { TypeContrat } from '../../../../models/TypeContrat';
 import { TypeVehicle } from '../../../../models/TypeVehicle';
 import { Vehicule } from '../../../../models/Vehicule';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-car',
@@ -31,7 +33,7 @@ export class CarComponent implements OnInit {
   editVignetteForm: FormGroup;
   editAssuranceForm: FormGroup;
   editTaxForm: FormGroup;
-  // Enum values as arrays
+  
   vehicleTypes = Object.values(TypeVehicle);
   gearboxTypes = Object.values(TypeBoiteVitesse);
   contractTypes = Object.values(TypeContrat);
@@ -42,9 +44,10 @@ export class CarComponent implements OnInit {
   constructor(
     private carService: CarService,
     private fb: FormBuilder,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private router: Router
   ) {
-    // Initialize forms
+
     this.carForm = this.fb.group({
       plaque_immatriculation: ['', Validators.required],
       kilometrage: ['', Validators.required],
@@ -137,23 +140,23 @@ export class CarComponent implements OnInit {
     });
   }
 
-  // Open the "Add Car" modal
+
   openAddModal(): void {
     this.modalService.open(this.addCarModal, { size: 'lg' });
   }
 
-  // Open the "Edit Car" modal
+  
   openEditModal(car: Vehicule): void {
+    console.log("car id :",car.vehiculeId);
     this.selectedCar = car;
-
-    // Patch the edit forms with the selected car's data
+    console.log('Selected Car:', this.selectedCar);
+    console.log('Selected Car ID:', this.selectedCar.vehiculeId);
     this.editCarForm.patchValue(car);
     this.editModelForm.patchValue(car.modele);
     this.editVignetteForm.patchValue(car.vignette);
     this.editAssuranceForm.patchValue(car.assurance);
     this.editTaxForm.patchValue(car.taxe);
 
-    // Open the modal
     this.modalService.open(this.editCarModal, { size: 'lg' });
   }
   onEditSubmit(): void {
@@ -166,11 +169,11 @@ export class CarComponent implements OnInit {
         assurance: this.editAssuranceForm.value,
         taxe: this.editTaxForm.value,
       };
-
-      this.carService.updateCar(updatedCar.vehicule_id, updatedCar).subscribe({
+      console.log('Updated Car ID:', updatedCar.vehiculeId);
+      this.carService.updateCar(updatedCar.vehiculeId, updatedCar).subscribe({
         next: () => {
-          this.loadCars(); // Refresh the list
-          this.modalService.dismissAll(); // Close all modals
+          this.loadCars(); 
+          this.modalService.dismissAll(); 
         },
         error: (err) => {
           console.error('Error updating vehicle:', err);
@@ -179,19 +182,34 @@ export class CarComponent implements OnInit {
     }
   }
 
-  // Delete a car
+  
   deleteCar(id: number): void {
-    if (confirm('Are you sure you want to delete this car?')) {
-      this.carService.deleteCar(id).subscribe({
-        next: () => {
-          this.loadCars(); // Refresh the list
-        },
-        error: (err) => {
-          console.error('Error deleting car:', err);
-        },
-      });
-    }
+    Swal.fire({
+      title: 'Êtes-vous sûr(e) ?',
+      text: 'Cette action est irréversible !',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Oui, supprimer',
+      cancelButtonText: 'Annuler'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.carService.deleteCar(id).subscribe({
+          next: () => {
+            Swal.fire('Supprimé !', 'La voiture a été supprimée avec succès.', 'success');
+            this.loadCars(); 
+          },
+          error: (err) => {
+            Swal.fire('Erreur !', 'Un problème est survenu lors de la suppression.', 'error');
+            console.error('Erreur lors de la suppression de la voiture :', err);
+          }
+        });
+      }
+    });
   }
+  
+  
 
   onSubmit(): void {
     console.log('Submit button clicked');
@@ -213,9 +231,9 @@ export class CarComponent implements OnInit {
       this.carService.createCar(vehicleData).subscribe({
         next: () => {
           console.log('Car created successfully');
-          this.loadCars(); // Refresh the list
-          this.resetForms(); // Reset all forms
-          this.modalService.dismissAll(); // Close all modals
+          this.loadCars(); 
+          this.resetForms(); 
+          this.modalService.dismissAll(); 
         },
         error: (err) => {
           console.error('Error creating vehicle:', err);
@@ -246,12 +264,22 @@ export class CarComponent implements OnInit {
     this.assuranceForm.reset();
     this.taxForm.reset();
   }
-  searchQuery: string = '';
-  searchCriteria: keyof Vehicule = 'plaque_immatriculation'; // Explicitly define the type
 
-  filterCars(): void {
-    this.filteredCars = this.cars.filter(car =>
-      String(car[this.searchCriteria]).toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
+trackConsumption(car: any) {
+  this.router.navigate(['/menu-gestionnaire/consommation-vehicule', car.plaque_immatriculation]);
+}
+viewExpenses(car:any) {
+  this.router.navigate(['/menu-gestionnaire/report',car.plaque_immatriculation ]);
+}
+searchQuery: string = '';
+filterCars(): void {
+  if (!this.searchQuery) {
+    this.filteredCars = this.cars;
+    return;
   }
+
+  this.filteredCars = this.cars.filter(car =>
+    car.plaque_immatriculation.toLowerCase().includes(this.searchQuery.toLowerCase())
+  );
+}
 }

@@ -1,13 +1,7 @@
 <div class="container mt-4">
   <div class="search-bar mb-3">
-    <input type="text" [(ngModel)]="searchQuery" placeholder="Rechercher..." (input)="filterCars()" class="form-control">
-    <select [(ngModel)]="searchCriteria" class="form-select mt-2">
-      <option value="plaque_immatriculation">Plaque d'immatriculation</option>
-      <option value="typeCarburant">Type de carburant</option>
-      <option value="marque">Marque</option>
-    </select>
+    <input type="text"[(ngModel)]="searchQuery"placeholder="Rechercher par plaque d'immatriculation..."(input)="filterCars()"class="form-control"/>
   </div>
-
   <button class="btn btn-success mb-3" (click)="openAddModal()">
     <i class="fas fa-plus"></i> Ajouter un Véhicule
   </button>
@@ -15,6 +9,16 @@
   <div class="row">
     <div class="col-md-4 mb-4" *ngFor="let car of filteredCars">
       <div class="card">
+        <div class="card-header d-flex justify-content-end align-items-start p-2">
+          <button class="btn btn-link text-primary p-0 me-2" (click)="openEditModal(car)">
+            <i class="fas fa-edit"></i> 
+          </button>
+          <button class="btn btn-link text-danger p-0" (click)="deleteCar(car.vehiculeId)">
+            <i class="fas fa-trash"></i> 
+          </button>
+        </div>
+    
+      
         <div class="card-body">
           <h5 class="card-title">{{ car.modele.marque }} {{ car.modele.modele }}</h5>
           <p class="card-text">
@@ -26,14 +30,16 @@
             <strong>Assurance:</strong> {{ car.assurance.compagnieAssurance }}<br>
             <strong>Taxe:</strong> {{ car.taxe.codeTaxe }}
           </p>
-          <div class="d-flex justify-content-between">
-            <button class="btn btn-primary btn-sm" (click)="openEditModal(car)">
-              <i class="fas fa-edit"></i> Modifier
-            </button>
-            <button class="btn btn-danger btn-sm" (click)="deleteCar(car.vehicule_id)">
-              <i class="fas fa-trash"></i> Supprimer
-            </button>
-          </div>
+        </div>
+    
+        <!-- Consommation and Dépenses buttons at the bottom -->
+        <div class="card-footer d-flex justify-content-between align-items-center p-2">
+          <button class="btn btn-info btn-sm" (click)="trackConsumption(car)">
+            <i class="fas fa-chart-line"></i> Suivre Consommation
+          </button>
+          <button class="btn btn-warning btn-sm" (click)="viewExpenses(car)">
+            <i class="fas fa-eye"></i> Voir Dépenses
+          </button>
         </div>
       </div>
     </div>
@@ -132,13 +138,15 @@
                   <label for="numeroVignette" class="form-label">Numéro de vignette</label>
                   <input type="text" class="form-control" id="numeroVignette" formControlName="numeroVignette" required>
                 </div>
-                <div class="mb-3">
-                  <label for="dateExpiration" class="form-label">Date d'expiration</label>
-                  <input type="date" class="form-control" id="dateExpiration" formControlName="dateExpiration" required>
-                </div>
+                
                 <div class="mb-3">
                   <label for="dateDebut" class="form-label">Date de début</label>
                   <input type="date" class="form-control" id="dateDebut" formControlName="dateDebut" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="dateExpiration" class="form-label">Date d'expiration</label>
+                  <input type="date" class="form-control" id="dateExpiration" formControlName="dateExpiration" required>
                 </div>
                 <div class="mb-3">
                   <label for="coutAchat" class="form-label">Coût d'achat</label>
@@ -157,13 +165,15 @@
                   <label for="compagnieAssurance" class="form-label">Compagnie d'assurance</label>
                   <input type="text" class="form-control" id="compagnieAssurance" formControlName="compagnieAssurance" required>
                 </div>
-                <div class="mb-3">
-                  <label for="dateExpiration" class="form-label">Date d'expiration</label>
-                  <input type="date" class="form-control" id="dateExpiration" formControlName="dateExpiration" required>
-                </div>
+               
                 <div class="mb-3">
                   <label for="dateDebut" class="form-label">Date de début</label>
                   <input type="date" class="form-control" id="dateDebut" formControlName="dateDebut" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="dateExpiration" class="form-label">Date d'expiration</label>
+                  <input type="date" class="form-control" id="dateExpiration" formControlName="dateExpiration" required>
                 </div>
                 <div class="mb-3">
                   <label for="coutAssurance" class="form-label">Coût de l'assurance</label>
@@ -188,6 +198,7 @@
                   <label for="montant" class="form-label">Montant de la taxe</label>
                   <input type="number" class="form-control" id="montant" formControlName="montant" required>
                 </div>
+
               </form>
             </div>
           </div>
@@ -293,3 +304,78 @@
                   <label for="editNumeroVignette" class="form-label">Numéro de vignette</label>
                   <input type="text" class="form-control" id="editNumeroVignette" formControlName="numeroVignette" required>
                 </div>
+                <div class="mb-3">
+                  <label for="numeroVignette" class="form-label">Numéro de vignette</label>
+                  <input type="text" class="form-control" id="numeroVignette" formControlName="numeroVignette" required>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="dateDebut" class="form-label">Date de début</label>
+                  <input type="date" class="form-control" id="dateDebut" formControlName="dateDebut" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="dateExpiration" class="form-label">Date d'expiration</label>
+                  <input type="date" class="form-control" id="dateExpiration" formControlName="dateExpiration" required>
+                </div>
+                <div class="mb-3">
+                  <label for="coutAchat" class="form-label">Coût d'achat</label>
+                  <input type="number" class="form-control" id="coutAchat" formControlName="coutAchat" required>
+                </div>
+              </form>
+            </div>
+
+            <div id="editAssuranceInfo" class="tab-pane fade">
+              <form [formGroup]="editAssuranceForm">
+                <div class="mb-3">
+                  <label for="editIdAssurance" class="form-label">ID Assurance</label>
+                  <input type="text" class="form-control" id="editIdAssurance" formControlName="idAssurance" required>
+                </div>
+                <div class="mb-3">
+                  <label for="editCompagnieAssurance" class="form-label">Compagnie d'assurance</label>
+                  <input type="text" class="form-control" id="editCompagnieAssurance" formControlName="compagnieAssurance" required>
+                </div>
+                <div class="mb-3">
+                  <label for="editDateDebut" class="form-label">Date de début</label>
+                  <input type="date" class="form-control" id="editDateDebut" formControlName="dateDebut" required>
+                </div>
+                <div class="mb-3">
+                  <label for="editDateExpiration" class="form-label">Date d'expiration</label>
+                  <input type="date" class="form-control" id="editDateExpiration" formControlName="dateExpiration" required>
+                </div>
+                <div class="mb-3">
+                  <label for="editCoutAssurance" class="form-label">Coût de l'assurance</label>
+                  <input type="number" class="form-control" id="editCoutAssurance" formControlName="coutAssurance" required>
+                </div>
+                <div class="mb-3">
+                  <label for="editTypeContrat" class="form-label">Type de contrat</label>
+                  <select class="form-select" id="editTypeContrat" formControlName="typeContrat" required>
+                    <option *ngFor="let contract of contractTypes" [value]="contract">{{ contract }}</option>
+                  </select>
+                </div>
+              </form>
+            </div>
+
+
+            <div id="editTaxInfo" class="tab-pane fade">
+              <form [formGroup]="editTaxForm">
+                <div class="mb-3">
+                  <label for="editCodeTaxe" class="form-label">Code de taxe</label>
+                  <input type="text" class="form-control" id="editCodeTaxe" formControlName="codeTaxe" required>
+                </div>
+                <div class="mb-3">
+                  <label for="editMontant" class="form-label">Montant de la taxe</label>
+                  <input type="number" class="form-control" id="editMontant" formControlName="montant" required>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Fermer</button>
+              <button type="button" class="btn btn-primary" (click)="onEditSubmit()">Enregistrer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

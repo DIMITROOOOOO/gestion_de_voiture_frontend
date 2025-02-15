@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { MaintenanceRequest } from '../../../models/MaintenanceRequest';
+import { Nature } from '../../../models/Nature';
 @Injectable({
   providedIn: 'root', 
 })
@@ -36,5 +37,10 @@ export class MaintenanceService {
 
   getTotalDepenses(): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}/total-depenses`);
+
+  }
+
+  getMaintenancesByNature(nature: Nature): Observable<MaintenanceRequest[]> {
+    return this.http.get<MaintenanceRequest[]>(`${this.apiUrl}/by-nature?nature=${nature}`);
   }
 }
